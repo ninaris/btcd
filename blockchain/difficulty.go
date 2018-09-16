@@ -251,6 +251,11 @@ func (b *BlockChain) calcNextRequiredDifficulty(lastNode *blockNode, newBlockTim
 		return lastNode.bits, nil
 	}
 
+	// If the NoRetargeting is set true, no need to retarget.
+	if b.chainParams.NoRetargeting {
+		return lastNode.bits, nil
+	}
+
 	// Get the block node at the previous retarget (targetTimespan days
 	// worth of blocks).
 	firstNode := lastNode.RelativeAncestor(b.blocksPerRetarget - 1)

@@ -163,6 +163,9 @@ type Params struct {
 	// difficulty retargets.
 	RetargetAdjustmentFactor int64
 
+	// NoRetargeting defines whether the network should change difficulty.
+	NoRetargeting bool
+
 	// ReduceMinDifficulty defines whether the network should reduce the
 	// minimum required difficulty after a long enough period of time has
 	// passed without finding a block.  This is really only useful for test
@@ -343,6 +346,7 @@ var RegressionNetParams = Params{
 	TargetTimespan:           time.Hour * 24 * 14, // 14 days
 	TargetTimePerBlock:       time.Minute * 10,    // 10 minutes
 	RetargetAdjustmentFactor: 4,                   // 25% less, 400% more
+	NoRetargeting:            true,
 	ReduceMinDifficulty:      true,
 	MinDiffReductionTime:     time.Minute * 20, // TargetTimePerBlock * 2
 	GenerateSupported:        true,
