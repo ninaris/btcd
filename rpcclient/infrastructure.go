@@ -1025,8 +1025,14 @@ func (c *Client) start() {
 	// Start the I/O processing handlers depending on whether the client is
 	// in HTTP POST mode or the default websocket mode.
 	if c.config.HTTPPostMode {
-		c.wg.Add(1)
-		go c.sendPostHandler()
+		concurrency := c.config.Concurrency
+		if concurrency < 1 {
+			concurrency = 1
+		}
+		c.wg.Add(concurrency)
+		for i := 0; i < concurrency; i++ {
+			go c.sendPostHandler()
+		}
 	} else {
 		c.wg.Add(3)
 		go func() {
@@ -1116,6 +1122,8 @@ type ConnConfig struct {
 	// EnableBCInfoHacks is an option provided to enable compatibility hacks
 	// when connecting to blockchain.info RPC server
 	EnableBCInfoHacks bool
+
+	Concurrency int
 }
 
 // newHTTPClient returns a new http client that is configured according to the
